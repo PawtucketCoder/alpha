@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { ServerClient } from "postmark";
+import bcrypt from "bcrypt";
 
 // Load environment variables from .env file
 config();
@@ -19,40 +20,43 @@ const generateRandomCode = () => {
  * Sends an email with a random code using Postmark.
  */
 export async function handler(event) {
-    try {
-      const requestBody = JSON.parse(event.body);
-      const email = requestBody.email;
-  
-      const randomCode = generateRandomCode();
-  
-      const htmlBody = `
-        <h1>Welcome to our service!</h1>
-        <p>Please use the following 6-digit code to confirm your email address:</p>
-        <p style="font-size: 24px; font-weight: bold;">${randomCode}</p>
-        <p>Enter this code in our application to complete the email confirmation process.</p>
-        <p>If you didn't request this email, you can safely ignore it.</p>
-        <p>Best regards,<br>Your Service Team</p>
-      `;
-  
-      const result = await client.sendEmail({
-        From: process.env.FROM_EMAIL,
-        To: email, // Use the email from the form data
-        Subject: "Email Confirmation",
-        HtmlBody: htmlBody,
-        MessageStream: "outbound"
-      });
-  
-      console.log("Email sent successfully:", result);
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: "Email sent successfully" })
-      };
-    } catch (error) {
-      console.error("Error sending email:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "Error sending email" })
-      };
-    }
+  try {
+    const requestBody = JSON.parse(event.body);
+    const email = requestBody.email;
+
+    const randomCode = generateRandomCode();
+
+    const htmlBody = `
+      <h1>Welcome to our service!</h1>
+      <p>Please use the following 6-digit code to confirm your email address:</p>
+      <p style="font-size: 24px; font-weight: bold;">${randomCode}</p>
+      <p>Enter this code in our application to complete the email confirmation process.</p>
+      <p>If you didn't request this email, you can safely ignore it.</p>
+      <p>Best regards,<br>Your Service Team</p>
+    `;
+
+    // Hash the random code using bcrypt
+    const saltRounds = 10; // Number of salt rounds for bcrypt
+    const encryptedRandomCode = await bcrypt.hash(randomCode.toString(), saltRounds);
+
+    const result = await client.sendEmail({
+      From: process.env.FROM_EMAIL,
+      To: email,
+      Subject: "Email Confirmation",
+      HtmlBody: htmlBody,
+      MessageStream: "outbound",
+    });
+
+    console.log("Email sent successfully:", result);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Email sent successfully" }),
+    };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Error sending email" }),
+    };
   }
-  
+}
