@@ -20,6 +20,44 @@ document.addEventListener("DOMContentLoaded", async function () {
             // Your existing form submission code here
         });
     }
+
+    // Inside the DOMContentLoaded event handler
+    const signinForm = document.getElementById('signinForm');
+    if (signinForm) {
+        signinForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // Show loading spinner or message
+            document.getElementById('responseMessage').textContent = "Loading...";
+
+            const formData = new FormData(event.target);
+            const body = JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password')
+            });
+
+            try {
+                const response = await fetch('/.netlify/functions/sign-in', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body
+                });
+
+                // Check if request was successful
+                if (response.status === 200) {
+                    const responseBody = await response.json();
+                    document.getElementById('responseMessage').textContent = responseBody.message;
+                } else {
+                    // Handle errors based on status code
+                    document.getElementById('responseMessage').textContent = 'An error occurred.';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('responseMessage').textContent = 'An error occurred.';
+            }
+        });
+    }
+
 });
 
 async function loadHeader() {
@@ -130,27 +168,61 @@ if (document.getElementById('confirmationForm')) {
 }
 
 const videoPlayer = document.getElementById('videoPlayer');
+if (videoPlayer) {
+    // Play the video when it's ready
+    videoPlayer.addEventListener('canplay', () => {
+        videoPlayer.play();
+    });
 
-// Play the video when it's ready
-videoPlayer.addEventListener('canplay', () => {
-  videoPlayer.play();
-});
+    // Update playback time based on video progress
+    videoPlayer.addEventListener('timeupdate', () => {
+        // Implement custom time update logic here if needed
+    });
 
-// Update playback time based on video progress
-videoPlayer.addEventListener('timeupdate', () => {
-  // Implement custom time update logic here if needed
-});
-
-// Handle errors
-videoPlayer.addEventListener('error', () => {
-  alert('An error occurred while loading the video.');
-});
-
+    // Handle errors
+    videoPlayer.addEventListener('error', () => {
+        alert('An error occurred while loading the video.');
+    });
+}
 // Customize other player behaviors as needed
 
 // Change the video source dynamically
 function changeVideoSource(newSource) {
-  const sourceElement = videoPlayer.querySelector('source');
-  sourceElement.src = newSource;
-  videoPlayer.load();
+    const sourceElement = videoPlayer.querySelector('source');
+    sourceElement.src = newSource;
+    videoPlayer.load();
+}
+
+// Existing event listener for form submission in your script.js
+const signInForm = document.getElementById('signInForm');
+if (signInForm) {
+document.getElementById('signInForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // Collect form data
+    const formData = new FormData(event.target);
+    const body = JSON.stringify({
+        email: formData.get('email'),
+        password: formData.get('password')
+    });
+
+    // Send POST request to sign in
+    const response = await fetch('/.netlify/functions/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body
+    });
+
+    // Get the response
+    const responseBody = await response.json();
+
+    // Check if sign-in was successful
+    if (response.ok) {
+        const token = responseBody.token;
+        document.cookie = `token=${token}; SameSite=Strict;`;  // Writes the token as a cookie
+    } else {
+        console.error(responseBody.message);
+    }
+});
+
 }
