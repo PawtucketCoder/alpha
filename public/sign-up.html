@@ -21,17 +21,28 @@
   <!-- Main Content -->
   <main>
     
-    <!-- Email Confirmation Form Section -->
-    <h1>Email Confirmation</h1>
-    <form id="confirmationForm">
+    <!-- Sign Up Form Section -->
+    <h1>Sign Up</h1>
+    <form id="signupForm" autocomplete="off">
+      
+      <!-- Name Input Field -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required autocomplete="nope">
+      
+      <!-- Email Input Field -->
       <label for="email">Email Address:</label>
-      <input type="email" id="email" name="email" required>
-      <label for="code">Confirmation Code:</label>
-      <input type="text" id="code" name="code" required>
-      <button type="submit">Confirm</button>
+      <input type="email" id="email" name="email" required autocomplete="nope">
+      
+      <!-- Password Input Field -->
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required autocomplete="nope">
+      
+      <!-- Sign Up Button -->
+      <button type="submit">Sign Up</button>
     </form>
-    <p id="responseMessage"></p>
     
+    <!-- Response Message Display -->
+    <p id="responseMessage"></p>
   </main>
 
   <!-- Popup Container -->
