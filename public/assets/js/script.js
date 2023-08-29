@@ -196,33 +196,33 @@ function changeVideoSource(newSource) {
 // Existing event listener for form submission in your script.js
 const signInForm = document.getElementById('signInForm');
 if (signInForm) {
-document.getElementById('signInForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
+    document.getElementById('signInForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
 
-    // Collect form data
-    const formData = new FormData(event.target);
-    const body = JSON.stringify({
-        email: formData.get('email'),
-        password: formData.get('password')
+        // Collect form data
+        const formData = new FormData(event.target);
+        const body = JSON.stringify({
+            email: formData.get('email'),
+            password: formData.get('password')
+        });
+
+        // Send POST request to sign in
+        const response = await fetch('/.netlify/functions/sign-in', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body
+        });
+
+        // Get the response
+        const responseBody = await response.json();
+
+        // Check if sign-in was successful
+        if (response.ok) {
+            const token = responseBody.token;
+            document.cookie = `token=${token}; SameSite=Strict;`;  // Writes the token as a cookie
+        } else {
+            console.error(responseBody.message);
+        }
     });
-
-    // Send POST request to sign in
-    const response = await fetch('/.netlify/functions/sign-in', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body
-    });
-
-    // Get the response
-    const responseBody = await response.json();
-
-    // Check if sign-in was successful
-    if (response.ok) {
-        const token = responseBody.token;
-        document.cookie = `token=${token}; SameSite=Strict;`;  // Writes the token as a cookie
-    } else {
-        console.error(responseBody.message);
-    }
-});
 
 }
