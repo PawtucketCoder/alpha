@@ -226,3 +226,11 @@ if (signInForm) {
     });
 
 }
+
+function signOut() {
+    // Clear the token cookie
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Reload the homepage
+    window.location.href = '/index.html';
+}
