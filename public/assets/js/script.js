@@ -134,9 +134,13 @@ function addSigninFormEvent() {
                     body
                 });
 
+                if (response.status === 302) {
+                }
+
                 if (response.status === 200) {
-                    const responseBody = await response.json();
-                    document.getElementById('responseMessage').textContent = responseBody.message;
+                    window.location = response.headers.get('Location');
+                    // const responseBody = await response.json();
+                    // document.getElementById('responseMessage').textContent = responseBody.message;
                 } else {
                     document.getElementById('responseMessage').textContent = 'An error occurred.';
                 }
