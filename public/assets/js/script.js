@@ -20,6 +20,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     addSignupFormEvent();
     addSigninFormEvent();
     addVideoPlayerEvents();
+
+    // toggleSignInUpOutLinks();
+        // Check token and adjust navigation links
+        const token = getCookie('token');
+        const signUpLink = document.querySelector('a[href="/sign-up.html"]');
+        const signInLink = document.querySelector('a[href="/sign-in.html"]');
+        const signOutLink = document.querySelector('a[onClick="signOut();"]');
+    
+        if (token) {
+            if (signUpLink) signUpLink.style.display = 'none';
+            if (signInLink) signInLink.style.display = 'none';
+            if (signOutLink) signOutLink.style.display = 'block';
+        } else {
+            if (signUpLink) signUpLink.style.display = 'block';
+            if (signInLink) signInLink.style.display = 'block';
+            if (signOutLink) signOutLink.style.display = 'none';
+        }
 });
 
 async function loadHeader() {
@@ -141,7 +158,33 @@ function addVideoPlayerEvents() {
     }
 }
 
+/**
+ * Toggle the visibility of the Sign In, Sign Up, and Sign Out links based on the presence of the token cookie.
+ */
+function toggleSignInUpOutLinks() {
+    const signUpLink = document.getElementById('signUpLink');
+    const signInLink = document.getElementById('signInLink');
+    const signOutLink = document.getElementById('signOutLink');
+
+    // Make sure these elements exist before manipulating them.
+    // if (signUpLink && signInLink && signOutLink) {
+        const token = getCookie('token');
+
+        if (token) {
+            // If the token exists, hide Sign Up and Sign In, and show Sign Out.
+            signUpLink.style.display = 'none';
+            signInLink.style.display = 'none';
+            signOutLink.style.display = 'block';
+        } else {
+            // If the token doesn't exist, show Sign Up and Sign In, and hide Sign Out.
+            signUpLink.style.display = 'block';
+            signInLink.style.display = 'block';
+            signOutLink.style.display = 'none';
+        }
+    // }
+}
+
 function signOut() {
-    document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/.netlify/functions`;
+    document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     window.location.href = '/index.html';
 }
