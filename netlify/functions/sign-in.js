@@ -63,7 +63,7 @@ if (passwordMatch) {
     return {
       statusCode: 200,
       headers: {
-        'Set-Cookie': `token=${token}; HttpOnly; SameSite=Strict;`,
+        'Set-Cookie': `token=${token}; SameSite=Strict;`,
         // Add other headers here
       },
       body: JSON.stringify({ message: "Successfully signed in" }),

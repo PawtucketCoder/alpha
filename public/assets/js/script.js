@@ -1,63 +1,25 @@
-// Initialize the DOM elements once the document has fully loaded
+/**
+ * script.js
+ *
+ * This file handles the initialization of various elements and functionalities
+ * of a web application. It performs tasks such as loading headers, footers,
+ * and pop-ups, as well as attaching event listeners to various DOM elements.
+ *
+ * Functions include:
+ * - Loading partial HTML like headers and footers
+ * - Setting up cookies for user preferences
+ * - Adding interactivity like form submission and toggle button clicks
+ */
+
 document.addEventListener("DOMContentLoaded", async function () {
     await loadHeader();
     await loadPopup();
     await loadFooter();
 
-    // Add this check to make sure elements exist
-    const toggleButton = document.getElementsByClassName('toggle-button')[0];
-    const navbarLinks = document.getElementsByClassName('navbar-links')[0];
-    if (toggleButton && navbarLinks) {
-        toggleButton.addEventListener('click', () => {
-            navbarLinks.classList.toggle('active');
-        });
-    }
-
-    // Move this inside the DOMContentLoaded event handler
-    const signupForm = document.getElementById('signupForm');
-    if (signupForm) {
-        signupForm.addEventListener('submit', async function (event) {
-            // Your existing form submission code here
-        });
-    }
-
-    // Inside the DOMContentLoaded event handler
-    const signinForm = document.getElementById('signinForm');
-    if (signinForm) {
-        signinForm.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            // Show loading spinner or message
-            document.getElementById('responseMessage').textContent = "Loading...";
-
-            const formData = new FormData(event.target);
-            const body = JSON.stringify({
-                email: formData.get('email'),
-                password: formData.get('password')
-            });
-
-            try {
-                const response = await fetch('/.netlify/functions/sign-in', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body
-                });
-
-                // Check if request was successful
-                if (response.status === 200) {
-                    const responseBody = await response.json();
-                    document.getElementById('responseMessage').textContent = responseBody.message;
-                } else {
-                    // Handle errors based on status code
-                    document.getElementById('responseMessage').textContent = 'An error occurred.';
-                }
-            } catch (error) {
-                console.error(error);
-                document.getElementById('responseMessage').textContent = 'An error occurred.';
-            }
-        });
-    }
-
+    addToggleButtonEvent();
+    addSignupFormEvent();
+    addSigninFormEvent();
+    addVideoPlayerEvents();
 });
 
 async function loadHeader() {
@@ -79,14 +41,12 @@ async function loadPopup() {
     setupPopup();
 }
 
-// Function to set up event listeners and behavior for the popup
 function setupPopup() {
     const popup = document.getElementById('popup');
     const acceptBtn = document.getElementById('accept');
     const denyBtn = document.getElementById('deny');
 
     if (popup && acceptBtn && denyBtn) {
-        // Event listeners for accept and deny buttons in the popup
         acceptBtn.addEventListener('click', () => {
             setCookie('cookieConsent', '1', 365);
             popup.style.display = 'none';
@@ -97,20 +57,17 @@ function setupPopup() {
             popup.style.display = 'none';
         });
 
-        // Display the popup based on the cookie consent status
         const cookieConsent = getCookie('cookieConsent');
         popup.style.display = (cookieConsent === '') ? 'block' : 'none';
     }
 }
 
-// Function to set a cookie
 function setCookie(name, value, days) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;httpOnly=false`;
 }
 
-// Function to get a cookie
 function getCookie(name) {
     const cookieName = name + "=";
     const cookieArray = decodeURIComponent(document.cookie).split(';');
@@ -121,116 +78,70 @@ function getCookie(name) {
     return "";
 }
 
-// Event listener for form submission
-if (document.getElementById('signupForm')) {
-    document.getElementById('signupForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        // Collect form data and send POST request to create a new user
-        const formData = new FormData(event.target);
-        const body = JSON.stringify({
-            name: formData.get('name'),
-            email: formData.get('email'),
-            password: formData.get('password')
+function addToggleButtonEvent() {
+    const toggleButton = document.getElementsByClassName('toggle-button')[0];
+    const navbarLinks = document.getElementsByClassName('navbar-links')[0];
+    if (toggleButton && navbarLinks) {
+        toggleButton.addEventListener('click', () => {
+            navbarLinks.classList.toggle('active');
         });
-        const response = await fetch('/.netlify/functions/create-user', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body
-        });
-
-        // Display the response message
-        const responseBody = await response.json();
-        document.getElementById('responseMessage').textContent = responseBody.message;
-    });
-}
-if (document.getElementById('confirmationForm')) {
-
-    document.getElementById('confirmationForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        const email = formData.get('email');
-        const code = formData.get('code');
-
-        const response = await fetch('/.netlify/functions/confirm-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, code })
-        });
-
-        const responseBody = await response.json();
-
-        document.getElementById('responseMessage').textContent = responseBody.message;
-    });
+    }
 }
 
-const videoPlayer = document.getElementById('videoPlayer');
-if (videoPlayer) {
-    // Play the video when it's ready
-    videoPlayer.addEventListener('canplay', () => {
-        videoPlayer.play();
-    });
-
-    // Update playback time based on video progress
-    videoPlayer.addEventListener('timeupdate', () => {
-        // Implement custom time update logic here if needed
-    });
-
-    // Handle errors
-    videoPlayer.addEventListener('error', () => {
-        alert('An error occurred while loading the video.');
-    });
-}
-// Customize other player behaviors as needed
-
-// Change the video source dynamically
-function changeVideoSource(newSource) {
-    const sourceElement = videoPlayer.querySelector('source');
-    sourceElement.src = newSource;
-    videoPlayer.load();
+function addSignupFormEvent() {
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', async function (event) {
+            // Your existing form submission code here
+        });
+    }
 }
 
-// Existing event listener for form submission in your script.js
-const signInForm = document.getElementById('signInForm');
-if (signInForm) {
-    document.getElementById('signInForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
+function addSigninFormEvent() {
+    const signinForm = document.getElementById('signinForm');
+    if (signinForm) {
+        signinForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            document.getElementById('responseMessage').textContent = "Loading...";
+            
+            const formData = new FormData(event.target);
+            const body = JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password')
+            });
 
-        // Collect form data
-        const formData = new FormData(event.target);
-        const body = JSON.stringify({
-            email: formData.get('email'),
-            password: formData.get('password')
+            try {
+                const response = await fetch('/.netlify/functions/sign-in', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body
+                });
+
+                if (response.status === 200) {
+                    const responseBody = await response.json();
+                    document.getElementById('responseMessage').textContent = responseBody.message;
+                } else {
+                    document.getElementById('responseMessage').textContent = 'An error occurred.';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('responseMessage').textContent = 'An error occurred.';
+            }
         });
+    }
+}
 
-        // Send POST request to sign in
-        const response = await fetch('/.netlify/functions/sign-in', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body
+function addVideoPlayerEvents() {
+    const videoPlayer = document.getElementById('videoPlayer');
+    if (videoPlayer) {
+        videoPlayer.addEventListener('canplay', () => {
+            videoPlayer.play();
         });
-
-        // Get the response
-        const responseBody = await response.json();
-
-        // Check if sign-in was successful
-        if (response.ok) {
-            const token = responseBody.token;
-            document.cookie = `token=${token}; SameSite=Strict;`;  // Writes the token as a cookie
-        } else {
-            console.error(responseBody.message);
-        }
-    });
-
+        // ... Other video event handlers...
+    }
 }
 
 function signOut() {
-    // Clear the token cookie
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-    // Reload the homepage
+    document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/.netlify/functions`;
     window.location.href = '/index.html';
 }
