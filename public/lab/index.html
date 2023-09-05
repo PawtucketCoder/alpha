@@ -1,11 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Birthday Paradox</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #000; /* Fallback background color */
+    }
+
+    #videoBackground {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    #content {
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+    }
+  </style>
+  <title>Video Background</title>
 </head>
 <body>
-  <button onclick="simulateBirthdayParadox()">Simulate</button>
-  <p id="birthdayResult"></p>
-  <script src="/lab/birthdayParadox.js"></script>
+  <video id="videoBackground" autoplay muted loop>
+    <source src="http://192.168.0.11:8000/videos/test.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div id="content">
+    <h1>Welcome to our website</h1>
+    <p>Enjoy the video background!</p>
+  </div>
 </body>
 </html>

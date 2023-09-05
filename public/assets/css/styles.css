@@ -6,7 +6,13 @@
 body {
     margin: 0;
     padding: 0;
-}
+  }
+
+  #content {
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+  }
 
 .navbar {
     display: flex;
@@ -77,11 +83,12 @@ body {
 main {
     margin: 1rem auto;
     padding: 1rem;
-    max-width: 95%;
-    background-color: #ddd;
+    max-width: 90%;
+    background-color: rgba(221, 221, 221, 0.4); /* Translucent gray color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
+
 
 /* Headings */
 h1 {
@@ -219,11 +226,11 @@ p#responseMessage {
   }
 
 /* Add this rule to your existing stylesheet */
-.video-container {
-    display: flex;
+ .video-container {
+  display: flex;
     justify-content: center;
     align-items: center;
-    height: 40vh; /* Adjust as needed for your layout */
+    height: 40vh;
   }
   
   .video-container video {

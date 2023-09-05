@@ -64,7 +64,7 @@ if (passwordMatch) {
       statusCode: 200,
       headers: {
         'Set-Cookie': `token=${token}; SameSite=Strict; path=/`,
-        'Location': '/', // Add this line for redirection to the root
+        'Location': '/dashboard', // Add this line for redirection to the root
         // Add other headers here
       },
       body: JSON.stringify({ message: "Successfully signed in" }),
