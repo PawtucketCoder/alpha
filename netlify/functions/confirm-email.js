@@ -66,6 +66,10 @@ export async function handler(event) {
     // Return a success message
     return {
       statusCode: 200,
+      headers: {
+        'Location': '/sign-in.html', // Add this line for redirection to the root
+        // Add other headers here
+      },
       body: JSON.stringify({ message: "Email confirmed successfully" }),
     };
     

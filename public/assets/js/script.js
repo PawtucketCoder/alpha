@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     addToggleButtonEvent();
     addSignupFormEvent();
     addSigninFormEvent();
+    addConfirmationFormEvent();
     addVideoPlayerEvents();
 
     // toggleSignInUpOutLinks();
@@ -82,7 +83,7 @@ function setupPopup() {
 function setCookie(name, value, days) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;httpOnly=false`;
+    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
 }
 
 function getCookie(name) {
@@ -109,7 +110,36 @@ function addSignupFormEvent() {
     const signupForm = document.getElementById('signupForm');
     if (signupForm) {
         signupForm.addEventListener('submit', async function (event) {
-            // Your existing form submission code here
+            event.preventDefault();
+
+            document.getElementById('responseMessage').textContent = "Loading...";
+            
+            const formData = new FormData(event.target);
+            const data = {
+                name: formData.get("name"),
+                email: formData.get("email"),
+                password: formData.get("password")
+            };
+
+            try {
+                const response = await fetch(".netlify/functions/create-user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    window.location = response.headers.get('Location');
+                    document.getElementById("responseMessage").textContent = result.message;
+                } else {
+                    document.getElementById("responseMessage").textContent = "Error: " + result.message;
+                }
+            } catch (error) {
+                document.getElementById("responseMessage").textContent = "An error occurred. Please try again.";
+            }
         });
     }
 }
@@ -129,6 +159,44 @@ function addSigninFormEvent() {
 
             try {
                 const response = await fetch('/.netlify/functions/sign-in', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body
+                });
+
+                if (response.status === 302) {
+                }
+
+                if (response.status === 200) {
+                    window.location = response.headers.get('Location');
+                    // const responseBody = await response.json();
+                    // document.getElementById('responseMessage').textContent = responseBody.message;
+                } else {
+                    document.getElementById('responseMessage').textContent = 'An error occurred.';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('responseMessage').textContent = 'An error occurred.';
+            }
+        });
+    }
+}
+
+function addConfirmationFormEvent() {
+    const confirmationForm = document.getElementById('confirmationForm');
+    if (confirmationForm) {
+        confirmationForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            document.getElementById('responseMessage').textContent = "Loading...";
+            
+            const formData = new FormData(event.target);
+            const body = JSON.stringify({
+                email: formData.get('email'),
+                code: formData.get('code')
+            });
+
+            try {
+                const response = await fetch('/.netlify/functions/confirm-email', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body

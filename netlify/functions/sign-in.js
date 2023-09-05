@@ -43,7 +43,7 @@ export async function handler(event) {
         statusCode: 401,
         body: JSON.stringify({ message: "Invalid password" }),
       };
-    }
+    } 
 
 // ...
 if (passwordMatch) {
@@ -92,7 +92,7 @@ if (passwordMatch) {
     };
   } catch (error) {
     // Handle any errors
-    console.error("Error:", error);
+    console.error("BLAH:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Error signing in" }),

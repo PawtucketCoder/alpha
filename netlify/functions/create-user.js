@@ -85,11 +85,14 @@ export async function handler(event) {
 
         return {
             statusCode: 200,
+            headers: {
+                'Location': '/confirm-email.html', // Add this line for redirection to the root
+                // Add other headers here
+              },
             body: JSON.stringify({ message: "User created and email sent successfully" }),
         };
     } catch (error) {
         // Handle any errors
-        console.error("Error:", error);
         return {
             statusCode: 500,
             body: JSON.stringify({ message: "Error creating user or sending email" }),
