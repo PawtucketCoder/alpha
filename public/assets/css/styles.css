@@ -41,11 +41,22 @@ body {
     list-style: none;
 }
 
+.navbar-links li a img {
+  height: 24px; /* Adjust the height to your preferred size */
+  width: 24px; /* Adjust the width to your preferred size */
+  margin-right: 8px; /* Add some margin to separate the icon from text */
+}
+
 .navbar-links li a {
-    display: block;
-    text-decoration: none;
-    color: white;
-    padding: 1rem;
+  display: flex; /* Make the anchor and icon flex containers */
+  align-items: center; /* Center the content vertically */
+  text-decoration: none;
+  color: white;
+  padding: 1rem;
+}
+
+.navbar-links li a span {
+  align-self: center; /* Center the text vertically within its container */
 }
 
 .navbar-links li:hover {
@@ -230,13 +241,6 @@ p#responseMessage {
   display: flex;
     justify-content: center;
     align-items: center;
-    height: 40vh;
-  }
-  
-  .video-container video {
-    max-width: 400px;
-    width: 100%;
-    height: auto;
   }
 
 /* Add this to your existing stylesheet */
