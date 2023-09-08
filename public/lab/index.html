@@ -1,45 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: #000; /* Fallback background color */
-    }
-
-    #videoBackground {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    #content {
-      text-align: center;
-      color: #fff;
-      z-index: 1;
-    }
-  </style>
-  <title>Video Background</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/lab/styles.css">
+    <title>Video Thumbnails</title>
 </head>
 <body>
-  <video id="videoBackground" autoplay muted loop>
-    <source src="http://192.168.0.11:8000/videos/test.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <div id="content">
-    <h1>Welcome to our website</h1>
-    <p>Enjoy the video background!</p>
-  </div>
+    <div class="video-container" id="video-container">
+        <!-- Video thumbnails will be added here using JavaScript -->
+    </div>
+    <script src="/lab/script.js"></script>
 </body>
 </html>
